@@ -1,10 +1,10 @@
 import React from "react";
-import { useState } from "react";
 
 class Search extends React.Component{
     state = {
         query : '',
         data : [],
+        filteredData: []
     }
     handleInputChange = () => {
         this.setState({
@@ -20,5 +20,46 @@ class Search extends React.Component{
                 data:responseData
             })
         })
+    }
+    constructor(){
+        this.state = {isLoading: true}
+    }
+    componentDidMount(){
+        this.setState({ isLoading: false})
+    }
+    render(){
+        return(
+            this.state.isLoading ? showLoadingScreen : this.Search;
+        );
+        
+    }
+    filterArray = () => {
+        var searchString = this.state.query;
+        var responseData = this.state.query;
+
+        if(searchString.length > 0){
+            responseData = responseData.filter(l =>{
+                console.log(l.name.toLowerCase().match(searchString))
+            })
+        }
+    }
+    componentWillUnmount(){
+        this.getData();
+    }
+    render() {
+        return (
+            <div className="searchForm">
+                <form>
+                    <input type="text" id="filter" placeholder="Search for..." value={this.state.query} ref={input => this.search = input} onChange={this.handleInputChange}/>
+                </form>
+                <div>
+                    {
+                        this.state.filteredData.map((i) =>
+                            <p>{i.name}</p>
+                        )
+                    }
+                </div>
+            </div>
+        )
     }
 }
